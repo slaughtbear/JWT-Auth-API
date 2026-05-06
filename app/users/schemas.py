@@ -11,16 +11,16 @@ class Role(StrEnum):
 
 
 class UserBase(BaseModel):
-    username: Annotated[str, BeforeValidator(lambda v: v.strip())] = Field(min_length=8, max_length=16)
+    username: Annotated[str, BeforeValidator(lambda v: v.strip())] = Field(min_length=3, max_length=30)
     email: str
     full_name: str
     role: Role | None = "user"
-    disabled: bool | None = False
+    disabled: bool | None = None
 
 
 class UserCreate(UserBase):
     email: Annotated[EmailStr, BeforeValidator(get_clean_lower_text)]
-    full_name: Annotated[str, BeforeValidator(get_clean_title_text)]
+    full_name: Annotated[str, BeforeValidator(get_clean_title_text)] = Field(min_length=3, max_length=255)
     password: Annotated[str, BeforeValidator(lambda v: v.strip())] = Field(min_length=12, max_length=255)
     created_at: datetime | None = Field(default_factory=lambda: datetime.now(timezone.utc))
 
