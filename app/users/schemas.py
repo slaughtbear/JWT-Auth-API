@@ -29,7 +29,7 @@ class UserUpdate(BaseModel):
     full_name: Annotated[str | None, BeforeValidator(get_clean_title_text)] = Field(default=None, min_length=3, max_length=255)
     role: Role | None = None
     disabled: bool | None = None
-    password: str | None = None
+    password: str | None = Field(default=None, serialization_alias="hashed_password")
 
 
 class UserDB(UserBase):
