@@ -9,12 +9,11 @@ async def search_user_by_id(id: int, db: AsyncSession) -> User | None:
     return user
 
 
-async def create_user(user_data: dict, db: AsyncSession) -> User:
-    user_model = User(**user_data)
-    db.add(user_model)
+async def create_user(user_data: User, db: AsyncSession) -> User:
+    db.add(user_data)
     await db.commit()
-    await db.refresh(user_model)
-    return user_model
+    await db.refresh(user_data)
+    return user_data
 
 
 async def read_users(db: AsyncSession) -> list[User]:

@@ -1,9 +1,19 @@
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.security import get_password_hash
+
 from app.users import repository
 from app.users.models import User
-from app.users.schemas import UserUpdate
+from app.users.schemas import UserCreate, UserUpdate
+
+
+async def create_user(user_data: UserCreate, db: AsyncSession) -> User:
+    user_data.password = get_password_hash(user_data.password)
+    user_dict = user_data.model_dump(by_alias=True)
+    user_model = User(**user_dict)
+    new_user = await repository.create_user(user_model, db)
+    return new_user
 
 
 async def update_user_by_id(id: int, user_data: UserUpdate, db: AsyncSession) -> User:

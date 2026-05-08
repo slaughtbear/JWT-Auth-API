@@ -13,7 +13,7 @@ router = APIRouter()
 
 @router.post("/", response_model=UserResponse)
 async def create_user(user_data: UserCreate, db: AsyncSession = Depends(get_session)):
-    return await repository.create_user(user_data.model_dump(by_alias=True), db)
+    return await service.create_user(user_data, db)
 
 
 @router.get("/", response_model=list[UserResponse])
