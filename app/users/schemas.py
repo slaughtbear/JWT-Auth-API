@@ -44,4 +44,4 @@ class UserResponse(UserBase):
     id: int
     disabled: bool
     created_at: datetime
-    updated_at: datetime
+    updated_at: datetime | None
