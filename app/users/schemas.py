@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from enum import StrEnum
 from typing import Annotated
 from pydantic import BaseModel, Field, EmailStr, BeforeValidator
@@ -11,18 +11,17 @@ class Role(StrEnum):
 
 
 class UserBase(BaseModel):
-    username: Annotated[str, BeforeValidator(lambda v: v.strip())] = Field(min_length=3, max_length=30)
+    username: str
     email: str
     full_name: str
-    role: Role | None = "user"
-    disabled: bool | None = None
+    role: Role | None = None
 
 
 class UserCreate(UserBase):
+    username: Annotated[str, BeforeValidator(lambda v: v.strip())] = Field(min_length=3, max_length=30)
     email: Annotated[EmailStr, BeforeValidator(get_clean_lower_text)]
     full_name: Annotated[str, BeforeValidator(get_clean_title_text)] = Field(min_length=3, max_length=255)
-    password: Annotated[str, BeforeValidator(lambda v: v.strip())] = Field(min_length=12, max_length=255)
-    created_at: datetime | None = Field(default_factory=lambda: datetime.now(timezone.utc))
+    password: Annotated[str, BeforeValidator(lambda v: v.strip())] = Field(min_length=12, max_length=255, serialization_alias="hashed_password")
 
 
 class UserUpdate(BaseModel):
@@ -31,11 +30,11 @@ class UserUpdate(BaseModel):
     role: Role | None = None
     disabled: bool | None = None
     password: str | None = None
-    updated_at: datetime | None = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class UserDB(UserBase):
     id: int
     hashed_password: str
+    disabled: bool
     created_at: datetime
     updated_at: datetime
