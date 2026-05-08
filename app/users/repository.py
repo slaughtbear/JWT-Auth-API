@@ -31,3 +31,9 @@ async def update_user(user_data: dict, db_user: User, db: AsyncSession) -> User:
     await db.commit()
     await db.refresh(db_user)
     return db_user
+
+
+async def delete_user(db_user: User, db: AsyncSession) -> bool:
+    await db.delete(db_user)
+    await db.commit()
+    return True

@@ -18,3 +18,15 @@ async def update_user_by_id(id: int, user_data: UserUpdate, db: AsyncSession) ->
     update_data = user_data.model_dump(exclude_unset=True)
     updated_user = await repository.update_user(update_data, db_user, db)
     return updated_user
+
+
+async def delete_user_by_id(id: int, db: AsyncSession) -> bool:
+    db_user = await repository.search_user_by_id(id, db)
+
+    if not db_user:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "User not found."
+        )
+    
+    return await repository.delete_user(db_user, db)
