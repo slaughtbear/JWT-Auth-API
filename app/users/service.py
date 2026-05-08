@@ -25,7 +25,8 @@ async def update_user_by_id(id: int, user_data: UserUpdate, db: AsyncSession) ->
             detail = "User not found."
         )
     
-    update_data = user_data.model_dump(exclude_unset=True)
+    user_data.password = get_password_hash(user_data.password)
+    update_data = user_data.model_dump(exclude_unset=True, by_alias=True)
     updated_user = await repository.update_user(update_data, db_user, db)
     return updated_user
 
