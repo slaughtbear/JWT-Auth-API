@@ -9,9 +9,9 @@ from app.users import repository
 router = APIRouter()
 
 
-@router.post("/")
-async def create_user(user: UserCreate, db: AsyncSession = Depends(get_session)):
-    return await repository.create_user(user.model_dump(by_alias=True), db)
+@router.post("/", response_model=UserResponse)
+async def create_user(user_data: UserCreate, db: AsyncSession = Depends(get_session)):
+    return await repository.create_user(user_data.model_dump(by_alias=True), db)
 
 
 @router.get("/", response_model=list[UserResponse])
