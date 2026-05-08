@@ -38,3 +38,10 @@ class UserDB(UserBase):
     disabled: bool
     created_at: datetime
     updated_at: datetime
+
+
+class UserResponse(UserBase):
+    id: int
+    disabled: bool
+    created_at: datetime
+    updated_at: datetime
