@@ -5,10 +5,10 @@ from app.core.security import get_password_hash
 
 from app.users import repository
 from app.users.models import User
-from app.users.schemas import UserCreate, UserUpdate
+from app.users.schemas import UserUpdate
 
 
-async def create_user(user_data: UserCreate, db: AsyncSession) -> User:
+async def create_user(user_data, db: AsyncSession) -> User:
     user_data.password = get_password_hash(user_data.password)
     user_dict = user_data.model_dump(by_alias=True)
     user_model = User(**user_dict)
